@@ -17,4 +17,4 @@ COPY tools/config.sh /usr/local/bin/config.sh
 
 RUN chmod +x /usr/local/bin/config.sh
 
-ENTRYPOINT ["/usr/local/bin/init.sh"]
+ENTRYPOINT ["/usr/local/bin/config.sh"]
