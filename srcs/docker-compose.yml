@@ -31,7 +31,7 @@ services:
       dockerfile: Dockerfile
     env_file: .env
     ports:
-    - "443:443"
+      - "8443:443"
     restart: on-failure
 
   wordpress:
@@ -58,9 +58,9 @@ volumes:
   wordpress:
     driver: local
     driver_opts:
-    type: 'none'
-    o: 'bind'
-    device: '/home/kkafmagh/data/wordpress'
+      type: 'none'
+      o: 'bind'
+      device: '/home/kkafmagh/data/wordpress'
   mariadb:
     driver: local
     driver_opts:
@@ -70,13 +70,13 @@ volumes:
 
 networks:
   inception:
-  driver: bridge
+    driver: bridge
 
 secrets:
   db_password:
     file: ../secrets/db_password.txt
   db_root_password:
-    file: ../secrets/db_root_password.txt
+    file: ../secrets/root_password.txt
   wp_admin_password:
     file: ../secrets/wp_admin_password.txt
   wp_user_password:

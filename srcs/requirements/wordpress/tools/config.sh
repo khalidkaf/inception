@@ -7,9 +7,9 @@ WP_ADMIN_PASSWORD=$(cat /run/secrets/wp_admin_password)
 WP_USER_PASSWORD=$(cat /run/secrets/wp_user_password)
 
 mkdir -p /run/php
-mkdir -p /var/www/html
+mkdir -p /var/www/wordpress
 
-chown -R www-data:www-data /var/www/html
+chown -R www-data:www-data /var/www/wordpress
 
 echo "Waiting for MariaDB..."
 
@@ -77,4 +77,13 @@ chown -R www-data:www-data /var/www/wordpress
 
 echo "WordPress is ready."
 
-exec php-fpm7.3 -F
+if command -v php-fpm7.4 >/dev/null 2>&1; then
+    exec php-fpm7.4 -F
+elif command -v php-fpm >/dev/null 2>&1; then
+    exec php-fpm -F
+elif command -v php-fpm7.3 >/dev/null 2>&1; then
+    exec php-fpm7.3 -F
+else
+    echo "php-fpm binary not found; container will exit"
+    exit 1
+fi
