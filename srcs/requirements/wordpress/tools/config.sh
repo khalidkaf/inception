@@ -28,23 +28,27 @@ for i in {1..60}; do
     sleep 2
 done
 
-cd /var/www.html
+cd /var/www/wordpress
 
 if [ ! -f "wp-config.php" ]; then
     echo "Downloading WordPress..."
 
     if [ ! -f "index.php" ]; then
-        wp core download --allow-root
+        echo "Downloading WordPress..."
+        wp core download --allow-root --path=/var/www/wordpress
     fi
 
-    echo "Creating wp-config.php..."
+    if [ ! -f "wp-config.php" ]; then
+        echo "Creating wp-config.php..."
+        wp config create \
+            --dbname="$MYSQL_DATABASE" \
+            --dbuser="$MYSQL_USER" \
+            --dbpass="$MYSQL_PASSWORD" \
+            --dbhost="mariadb:3306" \
+            --allow-root \
+            --path=/var/www/wordpress
+    fi
 
-    wp config create \
-        --dbname="$MYSQL_DATABASE" \
-        --dbuser="$MYSQL_USER" \
-        --dbpass="$MYSQL_PASSWORD" \
-        --dbhost="mariadb:3306" \
-        --allow-root
 fi
 
 if ! wp core is-installed --allow-root > /dev/null 2>&1; then
@@ -69,7 +73,7 @@ if ! wp user get "$WP_USER" --allow-root > /dev/null 2>&1; then
         --allow-root
 fi
 
-chown -R www-data:www-data /var/www/html
+chown -R www-data:www-data /var/www/wordpress
 
 echo "WordPress is ready."
 
